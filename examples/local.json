@@ -1,0 +1,12 @@
+{
+  "backends": {
+    "small": {"type": "llm", "base_url": "http://127.0.0.1:8080/v1", "model": "qwen3.5-4b", "permutations": 2}
+  },
+  "route": [
+    {"backend": "small", "min_confidence": 0.9}
+  ],
+  "on_low_confidence": "human",
+  "guards": {"refund": {"always_human": ["true"]}},
+  "audit_log": "decide-audit.jsonl",
+  "review_queue": "decide-review.jsonl"
+}

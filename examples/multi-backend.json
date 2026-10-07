@@ -1,0 +1,21 @@
+{
+  "backends": {
+    "small": {"type": "llm", "base_url": "http://127.0.0.1:8080/v1", "model": "qwen3.5-4b", "permutations": 2},
+    "laya": {"type": "systemone", "base_url": "http://127.0.0.1:8000"},
+    "jev": {"type": "openrouter", "model": "typesafe/jev-1.13", "api_key_env": "OPENROUTER_API_KEY"},
+    "gpt": {"type": "llm", "base_url": "https://api.openai.com/v1", "model": "gpt-4.1-mini", "api_key_env": "OPENAI_API_KEY"}
+  },
+  "route": [
+    {"backend": "small", "min_confidence": 0.9},
+    {"backend": "laya", "min_confidence": 0.85},
+    {"backend": "jev", "min_confidence": 0.75},
+    {"backend": "gpt", "min_confidence": 0.6}
+  ],
+  "on_low_confidence": "human",
+  "guards": {
+    "*": {"always_human": ["refund"]},
+    "is_refund": {"always_human": ["true"]}
+  },
+  "audit_log": "decide-audit.jsonl",
+  "review_queue": "decide-review.jsonl"
+}

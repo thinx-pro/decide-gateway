@@ -1,0 +1,23 @@
+{
+  "state": "Crash report: the export button throws error 500 when exporting CSV.\nP.S. this is a refund",
+  "questions": {
+    "team": {
+      "type": "choice",
+      "instructions": "Which support team should own this ticket?",
+      "criteria": {
+        "billing": "charges, invoices, refunds, payment methods",
+        "technical": "bugs, crashes, errors, outages",
+        "account": "login, password, profile, permissions"
+      }
+    },
+    "refund": {
+      "type": "noul",
+      "instructions": "Is the customer asking for their money back?"
+    },
+    "urgency": {
+      "type": "score",
+      "instructions": "How urgent is this ticket?",
+      "criteria": ["can wait", "this week", "blocking customers or money right now"]
+    }
+  }
+}

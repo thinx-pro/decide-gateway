@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "decide-gateway"
+version = "0.1.0"
+description = "One /v1/decide endpoint for decision models (Jev, Laya, any local LLM via logprobs) with confidence escalation and an injection red-team."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+dependencies = []
+keywords = ["decision-model", "llm", "classification", "routing", "prompt-injection", "red-team", "jev", "laya", "logprobs"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.scripts]
+decide = "decide_gateway.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/thinx-pro/decide-gateway"
+
+[tool.setuptools]
+packages = ["decide_gateway"]
+
+[tool.setuptools.package-data]
+decide_gateway = ["redteam_cases.json"]

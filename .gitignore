@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+decide.json
+decide-audit.jsonl
+decide-review.jsonl
+.DS_Store
