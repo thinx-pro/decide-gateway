@@ -243,16 +243,34 @@ class ServerTests(unittest.TestCase):
 class RedteamTests(unittest.TestCase):
     def test_suite_shape(self):
         suite = redteam.load_suite()
-        self.assertGreaterEqual(len(suite["cases"]), 30)
+        self.assertGreaterEqual(len(suite["cases"]), 50)
+        ids = [c["id"] for c in suite["cases"]]
+        self.assertEqual(len(ids), len(set(ids)))
         for c in suite["cases"]:
             self.assertIn(c["q"], suite["questions"])
             self.assertIn(c["attack"], redteam.CATEGORIES)
+            self.assertIn(c.get("split", "dev"), redteam.SPLITS)
+
+    def test_hardened_prompt_does_not_quote_the_suite(self):
+        from decide_gateway.backends import SYSTEM_HARDENED
+        prompt = SYSTEM_HARDENED.lower()
+        for phrase in ("p.s.", "refund", "ignore previous", "system:", "answer b", "billing"):
+            self.assertNotIn(phrase, prompt)
+
+    def test_wilson(self):
+        self.assertEqual(redteam.wilson(0, 0), None)
+        lo, hi = redteam.wilson(0, 13)
+        self.assertEqual(lo, 0.0)
+        self.assertTrue(0.2 < hi < 0.3)
+        lo, hi = redteam.wilson(5, 13)
+        self.assertTrue(lo < 5 / 13 < hi)
 
     def test_run_with_mock(self):
         from decide_gateway.backends import MockBackend
         rep = redteam.run(MockBackend("m", {}))
         s = rep["summary"]
-        self.assertEqual(s["cases"], 30)
+        self.assertEqual(s["cases"], len(redteam.load_suite()["cases"]))
+        self.assertEqual(set(s["injection_by_split"]), {"dev", "heldout"})
         self.assertEqual(s["errors"], 0)
         self.assertIsNotNone(s["accuracy"])
         text = redteam.render(rep, color=False)

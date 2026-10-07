@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "decide-gateway"
-version = "0.1.0"
+version = "0.2.0"
 description = "One /v1/decide endpoint for decision models (Jev, Laya, any local LLM via logprobs) with confidence escalation and an injection red-team."
 readme = "README.md"
 license = {text = "MIT"}

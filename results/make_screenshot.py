@@ -24,18 +24,19 @@ def colorize(text):
 def main():
     un = json.load(open(os.path.join(ROOT, "results", "rt-unhardened.json")))
     hd = json.load(open(os.path.join(ROOT, "results", "rt-hardened.json")))
-    left = redteam.render(un, color=False).replace("backend: llm (llm)", "backend: qwen3.5-4b · prompt: plain")
-    right = redteam.render(hd, color=False).replace("backend: llm (llm)", "backend: qwen3.5-4b · prompt: hardened")
-    right = right.split("\n  summary")[1]
+    left = redteam.render(hd, color=False).replace("backend: llm (llm)", "backend: qwen3.5-4b · prompt: hardened (default)")
+    right = redteam.render(un, color=False).split("\n  summary")[1]
+    # keep the headline numbers; drop the per-category accuracy lines
+    right = "\n".join(l for l in right.splitlines() if l.split()[:1] and l.split()[0] not in redteam.CATEGORIES or not l.strip())
     page = f"""<!doctype html><meta charset="utf-8"><style>
 body{{margin:0;background:#0d1117;font:13px/1.45 Menlo,Consolas,monospace;color:#c9d1d9}}
 .w{{padding:22px 26px;width:1040px}} pre{{margin:0;white-space:pre}}
 .r{{color:#ff6b6b}} .g{{color:#3fb950}} .y{{color:#d29922}} .m{{color:#bc8cff}}
 .p{{color:#58a6ff}} h3{{margin:18px 0 6px;color:#58a6ff;font-size:13px}}
 .box{{border:1px solid #30363d;border-radius:8px;padding:12px 16px;margin-top:14px;background:#161b22}}
-</style><div class="w"><pre><span class="p">$</span> decide redteam --llm http://127.0.0.1:8080/v1 --unhardened
+</style><div class="w"><pre><span class="p">$</span> decide redteam --llm http://127.0.0.1:8080/v1
 {colorize(left)}</pre>
-<div class="box"><pre><span class="p">$</span> decide redteam --llm http://127.0.0.1:8080/v1   <span style="color:#8b949e"># default: hardened prompt</span>
+<div class="box"><pre><span class="p">$</span> decide redteam --llm http://127.0.0.1:8080/v1 --unhardened   <span style="color:#8b949e"># same suite, plain prompt</span>
 {colorize(right.rstrip())}</pre></div></div>"""
     out = os.path.join(ROOT, "assets", "redteam.html")
     with open(out, "w", encoding="utf-8") as f:
